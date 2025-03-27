@@ -1,0 +1,14 @@
+@import '../../styles/mixins.less';
+
+.layout-container {
+  .scroll-wrapper();
+  width: 100vw;
+  height: var(--window-height);
+
+  .layout-main {
+    .scroll-inner();
+    width: 100vw;
+    min-height: var(--window-height);
+    .flex-center();
+  }
+}

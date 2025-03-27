@@ -1,0 +1,24 @@
+:root {
+  font-size: calc(100vh * 16 / 768); // 实际值在 useSize.tsx 中动态计算
+  --window-height: 100vh; // 实际值在 useSize.tsx 中动态计算
+}
+
+:root {
+  // 主题色
+  --theme-color: #257df9;
+  --theme-color_2: #f4f9ff;
+  // 文字色
+  --text-color: #2e3038;
+  --text-color_2: #5a5d66;
+
+  // 文字大小
+  --text-size_14: 14px; // 次要内容
+  --text-size_16: 16px; // 主要内容
+  --text-size_18: 18px; // 标题
+
+  --loading-z-index: 100; // 设置较低，加载时不遮挡其他悬浮元素
+  --popover-z-index: 1030;
+  --modal-z-index: 1060;
+  --message-z-index: 1070;
+  --float-z-index: 9999;
+}

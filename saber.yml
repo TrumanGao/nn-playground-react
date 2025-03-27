@@ -1,0 +1,40 @@
+# phoenix 构建配置
+version: 2.0
+project_type: node
+stages:
+  - build
+
+build-testing:
+  stage: build
+  image: node:20.18.3
+  variables:
+    MODE: testing
+  script:
+    - npm install
+    - npm run build:$MODE
+  artifacts:
+    name: build-testing
+    upload: true
+    path:
+      - dist/**
+    tags:
+      - testing
+
+build-production:
+  stage: build
+  image: node:20.18.3
+  variables:
+    MODE: production
+  only:
+    branch:
+      - master
+  script:
+    - npm install
+    - npm run build:$MODE
+  artifacts:
+    name: build-production
+    upload: true
+    path:
+      - dist/**
+    tags:
+      - production
