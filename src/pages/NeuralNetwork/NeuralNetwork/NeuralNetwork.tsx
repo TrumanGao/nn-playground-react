@@ -2,6 +2,9 @@ import { useSize } from '@/hooks/useSize';
 import { useMyMessage } from '@/hooks/useMyMessage';
 import { useAppStore } from '@/states';
 import styles from './NeuralNetwork.module.less';
+import './styles/material.min.css';
+import './styles/styles.css';
+import './styles/googleApis.css';
 
 export function Component() {
   const { windowSize } = useAppStore();
@@ -46,7 +49,7 @@ export function Component() {
               <span className="value" id="iter-number"></span>
             </div>
             <div className="control ui-learningRate">
-              <label for="learningRate">Learning rate</label>
+              <label htmlFor="learningRate">Learning rate</label>
               <div className="select">
                 <select id="learningRate">
                   <option value="0.00001">0.00001</option>
@@ -64,7 +67,7 @@ export function Component() {
               </div>
             </div>
             <div className="control ui-activation">
-              <label for="activations">Activation</label>
+              <label htmlFor="activations">Activation</label>
               <div className="select">
                 <select id="activations">
                   <option value="relu">ReLU</option>
@@ -75,7 +78,7 @@ export function Component() {
               </div>
             </div>
             <div className="control ui-regularization">
-              <label for="regularizations">Regularization</label>
+              <label htmlFor="regularizations">Regularization</label>
               <div className="select">
                 <select id="regularizations">
                   <option value="none">None</option>
@@ -85,7 +88,7 @@ export function Component() {
               </div>
             </div>
             <div className="control ui-regularizationRate">
-              <label for="regularRate">Regularization rate</label>
+              <label htmlFor="regularRate">Regularization rate</label>
               <div className="select">
                 <select id="regularRate">
                   <option value="0">0</option>
@@ -102,7 +105,7 @@ export function Component() {
               </div>
             </div>
             <div className="control ui-problem">
-              <label for="problem">Problem type</label>
+              <label htmlFor="problem">Problem type</label>
               <div className="select">
                 <select id="problem">
                   <option value="classification">Classification</option>
@@ -163,7 +166,7 @@ export function Component() {
             </div>
             <div>
               <div className="ui-percTrainData">
-                <label for="percTrainData">
+                <label htmlFor="percTrainData">
                   Ratio of training to test data:&nbsp;&nbsp;
                   <span className="value">XX</span>%
                 </label>
@@ -179,7 +182,7 @@ export function Component() {
                 </p>
               </div>
               <div className="ui-noise">
-                <label for="noise">
+                <label htmlFor="noise">
                   Noise:&nbsp;&nbsp;<span className="value">XX</span>
                 </label>
                 <p className="slider">
@@ -194,7 +197,7 @@ export function Component() {
                 </p>
               </div>
               <div className="ui-batchSize">
-                <label for="batchSize">
+                <label htmlFor="batchSize">
                   Batch size:&nbsp;&nbsp;<span className="value">XX</span>
                 </label>
                 <p className="slider">
@@ -257,15 +260,15 @@ export function Component() {
                       id="arrow"
                       markerWidth="5"
                       markerHeight="5"
-                      refx="5"
-                      refy="2.5"
+                      refX="5"
+                      refY="2.5"
                       orient="auto"
                       markerUnits="userSpaceOnUse"
                     >
                       <path d="M0,0 L5,2.5 L0,5 z" />
                     </marker>
                   </defs>
-                  <path d="M12,30C5,20 2,15 12,0" marker-end="url(#arrow)" />
+                  <path d="M12,30C5,20 2,15 12,0" markerEnd="url(#arrow)" />
                 </svg>
                 <div className="label">
                   This is the output from one <b>neuron</b>. Hover to see it
@@ -279,15 +282,15 @@ export function Component() {
                       id="arrow"
                       markerWidth="5"
                       markerHeight="5"
-                      refx="5"
-                      refy="2.5"
+                      refX="5"
+                      refY="2.5"
                       orient="auto"
                       markerUnits="userSpaceOnUse"
                     >
                       <path d="M0,0 L5,2.5 L0,5 z" />
                     </marker>
                   </defs>
-                  <path d="M12,30C5,20 2,15 12,0" marker-end="url(#arrow)" />
+                  <path d="M12,30C5,20 2,15 12,0" markerEnd="url(#arrow)" />
                 </svg>
                 <div className="label">
                   The outputs are mixed with varying <b>weights</b>, shown by
@@ -352,18 +355,18 @@ export function Component() {
                     >
                       <stop
                         offset="0%"
-                        stop-color="#f59322"
-                        stop-opacity="1"
+                        stopColor="#f59322"
+                        stopOpacity="1"
                       ></stop>
                       <stop
                         offset="50%"
-                        stop-color="#e8eaeb"
-                        stop-opacity="1"
+                        stopColor="#e8eaeb"
+                        stopOpacity="1"
                       ></stop>
                       <stop
                         offset="100%"
-                        stop-color="#0877bd"
-                        stop-opacity="1"
+                        stopColor="#0877bd"
+                        stopOpacity="1"
                       ></stop>
                     </linearGradient>
                   </defs>
@@ -380,13 +383,13 @@ export function Component() {
               <div style={{ display: 'flex' }}>
                 <label
                   className="ui-showTestData mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
-                  for="show-test-data"
+                  htmlFor="show-test-data"
                 >
                   <input
                     type="checkbox"
                     id="show-test-data"
                     className="mdl-checkbox__input"
-                    checked
+                    defaultChecked
                   />
                   <span className="mdl-checkbox__label label">
                     Show test data
@@ -394,13 +397,13 @@ export function Component() {
                 </label>
                 <label
                   className="ui-discretize mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
-                  for="discretize"
+                  htmlFor="discretize"
                 >
                   <input
                     type="checkbox"
                     id="discretize"
                     className="mdl-checkbox__input"
-                    checked
+                    defaultChecked
                   />
                   <span className="mdl-checkbox__label label">
                     Discretize output
