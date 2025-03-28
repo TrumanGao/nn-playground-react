@@ -2,9 +2,15 @@ import { useSize } from '@/hooks/useSize';
 import { useMyMessage } from '@/hooks/useMyMessage';
 import { useAppStore } from '@/states';
 import styles from './NeuralNetwork.module.less';
+// bundle.css = node_modules/material-design-lite/material.min.css + public/styles.css
 import './styles/material.min.css';
 import './styles/styles.css';
 import './styles/googleApis.css';
+// lib.js = node_modules/material-design-lite/material.min.js + node_modules/seedrandom/seedrandom.min.js
+import './javascripts/material.min';
+import './javascripts/seedrandom.min';
+// Google analytics
+import './javascripts/analytics';
 
 export function Component() {
   const { windowSize } = useAppStore();
