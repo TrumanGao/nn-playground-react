@@ -9,6 +9,8 @@ import './styles/googleApis.css';
 // lib.js = node_modules/material-design-lite/material.min.js + node_modules/seedrandom/seedrandom.min.js
 import './javascripts/material.min';
 import './javascripts/seedrandom.min';
+// bundle.js = playground.ts
+// import './playground/playground';
 // Google analytics
 import './javascripts/analytics';
 
