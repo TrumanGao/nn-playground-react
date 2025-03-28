@@ -10,7 +10,7 @@ import './styles/googleApis.css';
 import './javascripts/material.min';
 import './javascripts/seedrandom.min';
 // bundle.js = playground.ts
-// import './playground/playground';
+import './playground/index';
 // Google analytics
 import './javascripts/analytics';
 
