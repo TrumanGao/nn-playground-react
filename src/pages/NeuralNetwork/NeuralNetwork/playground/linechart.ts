@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-import * as d3 from 'd3';
+import { scale as d3Scale, svg as d3Svg } from 'd3';
 
 type DataPoint = {
   x: number;
@@ -46,9 +46,9 @@ export class AppendingLineChart {
     let width = totalWidth - margin.left - margin.right;
     let height = totalHeight - margin.top - margin.bottom;
 
-    this.xScale = d3.scale.linear().domain([0, 0]).range([0, width]);
+    this.xScale = d3Scale.linear().domain([0, 0]).range([0, width]);
 
-    this.yScale = d3.scale.linear().domain([0, 0]).range([height, 0]);
+    this.yScale = d3Scale.linear().domain([0, 0]).range([height, 0]);
 
     this.svg = container
       .append('svg')
@@ -93,7 +93,7 @@ export class AppendingLineChart {
     this.yScale.domain([this.minY, this.maxY]);
     // Adjust all the <path> elements (lines).
     let getPathMap = (lineIndex: number) => {
-      return d3.svg
+      return d3Svg
         .line<{ x: number; y: number }>()
         .x((d) => this.xScale(d.x))
         .y((d) => this.yScale(d.y[lineIndex]));
