@@ -2,14 +2,6 @@ import { useSize } from '@/hooks/useSize';
 import { useMyMessage } from '@/hooks/useMyMessage';
 import { useAppStore } from '@/states';
 import styles from './NeuralNetwork.module.less';
-// bundle.css
-import 'material-design-lite/material.min.css';
-import './assets/styles.css';
-// lib.js
-import 'material-design-lite/material.min.js';
-import 'seedrandom/seedrandom.min.js';
-// analytics.js
-import './assets/analytics';
 
 export function Component() {
   const { windowSize } = useAppStore();

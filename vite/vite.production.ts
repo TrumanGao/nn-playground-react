@@ -6,7 +6,5 @@ export default defineConfig({
   ...baseUserConfig,
   mode: 'PRODUCTION',
   base: './',
-  esbuild: {
-    drop: ['debugger'],
-  },
+  esbuild: { drop: ['debugger'] },
 });

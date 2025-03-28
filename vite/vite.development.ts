@@ -17,9 +17,7 @@ export default defineConfig({
     }),
   ],
   mode: 'DEVELOPMENT',
-  define: {
-    __DEVELOPER__: JSON.stringify(process.env.__DEVELOPER__),
-  },
+  define: { __DEVELOPER__: JSON.stringify(process.env.__DEVELOPER__) },
   server: {
     open: true,
     host: 'localhost',

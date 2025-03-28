@@ -4,6 +4,7 @@
   "editor.fontSize": 16,
   "explorer.confirmDragAndDrop": true,
   "explorer.confirmUndo": "default",
+  "prettier.requireConfig": true,
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
