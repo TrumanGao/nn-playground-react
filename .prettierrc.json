@@ -2,5 +2,8 @@
   "$schema": "https://json.schemastore.org/prettierrc",
   "semi": true,
   "tabWidth": 2,
-  "singleQuote": true
+  "singleQuote": true,
+  "bracketSameLine": false,
+  "trailingComma": "all",
+  "printWidth": 80
 }

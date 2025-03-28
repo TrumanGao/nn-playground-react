@@ -19,6 +19,7 @@
     "@ant-design/icons": "^5.6.1",
     "antd": "^5.24.1",
     "axios": "^1.7.9",
+    "d3": "^3.5.16",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/d3": "^3.5.34",
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.10.6",
     "@types/react": "^18.3.18",

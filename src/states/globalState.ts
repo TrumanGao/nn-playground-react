@@ -1,8 +1,6 @@
 import { type StateCreator } from 'zustand';
 
-const InitialVisibleMap = {
-  confirmModal: false,
-};
+const InitialVisibleMap = { confirmModal: false };
 
 export interface globalSlice {
   visibleMap: typeof InitialVisibleMap;
@@ -11,18 +9,12 @@ export interface globalSlice {
   }) => void;
   screenOrientation: ScreenOrientation;
   updateScreenOrientation: (orientation: ScreenOrientation) => void;
-  windowSize: {
-    innerWidth: number;
-    innerHeight: number;
-  };
+  windowSize: { innerWidth: number; innerHeight: number };
   updateWindowSize: (size: { innerWidth: number; innerHeight: number }) => void;
   /**
    * 容器尺寸
    */
-  containerSize: {
-    width: number;
-    height: number;
-  };
+  containerSize: { width: number; height: number };
   /**
    * 设置容器尺寸
    */
@@ -38,10 +30,7 @@ export const createGlobalSlice: StateCreator<
   visibleMap: InitialVisibleMap,
   updateVisible(options) {
     set((state) => {
-      state.visibleMap = {
-        ...state.visibleMap,
-        ...options,
-      };
+      state.visibleMap = { ...state.visibleMap, ...options };
       return state;
     });
   },
@@ -64,10 +53,7 @@ export const createGlobalSlice: StateCreator<
       return state;
     });
   },
-  containerSize: {
-    width: 0,
-    height: 0,
-  },
+  containerSize: { width: 0, height: 0 },
   updateContainerSize(size) {
     set((state) => {
       state.containerSize = size;
