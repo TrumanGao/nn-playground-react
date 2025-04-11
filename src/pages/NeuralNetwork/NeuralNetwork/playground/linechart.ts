@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-import { scale as d3Scale, svg as d3Svg } from 'd3';
+import { svg as d3Svg } from 'd3';
+import d3 from 'd3';
 
 type DataPoint = {
   x: number;
@@ -46,9 +47,9 @@ export class AppendingLineChart {
     let width = totalWidth - margin.left - margin.right;
     let height = totalHeight - margin.top - margin.bottom;
 
-    this.xScale = d3Scale.linear().domain([0, 0]).range([0, width]);
+    this.xScale = d3.scaleLinear().domain([0, 0]).range([0, width]);
 
-    this.yScale = d3Scale.linear().domain([0, 0]).range([height, 0]);
+    this.yScale = d3.scaleLinear().domain([0, 0]).range([height, 0]);
 
     this.svg = container
       .append('svg')
