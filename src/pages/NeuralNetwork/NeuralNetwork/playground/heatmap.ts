@@ -14,7 +14,6 @@ limitations under the License.
 ==============================================================================*/
 
 import { Example2D } from './dataset';
-import { rgb as d3Rgb, svg as d3Svg } from 'd3';
 import d3 from 'd3';
 
 export interface HeatMapSettings {
@@ -125,9 +124,9 @@ export class HeatMap {
     }
 
     if (this.settings.showAxes) {
-      let xAxis = d3Svg.axis().scale(this.xScale).orient('bottom');
+      let xAxis = d3.axisBottom(this.xScale);
 
-      let yAxis = d3Svg.axis().scale(this.yScale).orient('right');
+      let yAxis = d3.axisRight(this.yScale);
 
       this.svg
         .append('g')
@@ -177,7 +176,7 @@ export class HeatMap {
         if (discretize) {
           value = value >= 0 ? 1 : -1;
         }
-        let c = d3Rgb(this.color(value));
+        let c = d3.color(this.color(value));
         image.data[++p] = c.r;
         image.data[++p] = c.g;
         image.data[++p] = c.b;
