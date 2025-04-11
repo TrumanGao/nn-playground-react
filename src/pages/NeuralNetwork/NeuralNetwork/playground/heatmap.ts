@@ -14,7 +14,12 @@ limitations under the License.
 ==============================================================================*/
 
 import { Example2D } from './dataset';
-import * as d3 from 'd3';
+import {
+  scale as d3Scale,
+  range as d3Range,
+  rgb as d3Rgb,
+  svg as d3Svg,
+} from 'd3';
 
 export interface HeatMapSettings {
   [key: string]: any;
@@ -61,30 +66,30 @@ export class HeatMap {
       }
     }
 
-    this.xScale = d3.scale
+    this.xScale = d3Scale
       .linear()
       .domain(xDomain)
       .range([0, width - 2 * padding]);
 
-    this.yScale = d3.scale
+    this.yScale = d3Scale
       .linear()
       .domain(yDomain)
       .range([height - 2 * padding, 0]);
 
     // Get a range of colors.
-    let tmpScale = d3.scale
+    let tmpScale = d3Scale
       .linear<string, number>()
       .domain([0, 0.5, 1])
       .range(['#f59322', '#e8eaeb', '#0877bd'])
       .clamp(true);
     // Due to numerical error, we need to specify
-    // d3.range(0, end + small_epsilon, step)
+    // d3Range(0, end + small_epsilon, step)
     // in order to guarantee that we will have end/step entries with
     // the last element being equal to end.
-    let colors = d3.range(0, 1 + 1e-9, 1 / NUM_SHADES).map((a) => {
+    let colors = d3Range(0, 1 + 1e-9, 1 / NUM_SHADES).map((a) => {
       return tmpScale(a);
     });
-    this.color = d3.scale.quantize().domain([-1, 1]).range(colors);
+    this.color = d3Scale.quantize().domain([-1, 1]).range(colors);
 
     container = container.append('div').style({
       width: `${width}px`,
@@ -124,9 +129,9 @@ export class HeatMap {
     }
 
     if (this.settings.showAxes) {
-      let xAxis = d3.svg.axis().scale(this.xScale).orient('bottom');
+      let xAxis = d3Svg.axis().scale(this.xScale).orient('bottom');
 
-      let yAxis = d3.svg.axis().scale(this.yScale).orient('right');
+      let yAxis = d3Svg.axis().scale(this.yScale).orient('right');
 
       this.svg
         .append('g')
@@ -176,7 +181,7 @@ export class HeatMap {
         if (discretize) {
           value = value >= 0 ? 1 : -1;
         }
-        let c = d3.rgb(this.color(value));
+        let c = d3Rgb(this.color(value));
         image.data[++p] = c.r;
         image.data[++p] = c.g;
         image.data[++p] = c.b;

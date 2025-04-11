@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-import * as d3 from 'd3';
+import { scale as d3Scale } from 'd3';
 
 /**
  * A two dimensional example: x and y coordinates with the label.
@@ -58,7 +58,7 @@ export function classifyTwoGaussData(
 ): Example2D[] {
   let points: Example2D[] = [];
 
-  let varianceScale = d3.scale.linear().domain([0, 0.5]).range([0.5, 4]);
+  let varianceScale = d3Scale.linear().domain([0, 0.5]).range([0.5, 4]);
   let variance = varianceScale(noise);
 
   function genGauss(cx: number, cy: number, label: number) {
@@ -76,7 +76,7 @@ export function classifyTwoGaussData(
 
 export function regressPlane(numSamples: number, noise: number): Example2D[] {
   let radius = 6;
-  let labelScale = d3.scale.linear().domain([-10, 10]).range([-1, 1]);
+  let labelScale = d3Scale.linear().domain([-10, 10]).range([-1, 1]);
   let getLabel = (x, y) => labelScale(x + y);
 
   let points: Example2D[] = [];
@@ -97,7 +97,7 @@ export function regressGaussian(
 ): Example2D[] {
   let points: Example2D[] = [];
 
-  let labelScale = d3.scale.linear().domain([0, 2]).range([1, 0]).clamp(true);
+  let labelScale = d3Scale.linear().domain([0, 2]).range([1, 0]).clamp(true);
 
   let gaussians = [
     [-4, 2.5, 1],
