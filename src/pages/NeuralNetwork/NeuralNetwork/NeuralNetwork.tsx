@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSize } from '@/hooks/useSize';
 import { useMyMessage } from '@/hooks/useMyMessage';
 import { useAppStore } from '@/states';
@@ -10,7 +11,7 @@ import './styles/googleApis.css';
 import './javascripts/material.min';
 import './javascripts/seedrandom.min';
 // bundle.js = playground.ts
-import './playground/index';
+// import './playground/index';
 // Google analytics
 import './javascripts/analytics';
 
@@ -20,6 +21,13 @@ export function Component() {
   const { myMessage, myMessageContextHolder } = useMyMessage({
     top: windowSize.innerHeight * 0.3,
   });
+
+  useEffect(() => {
+    // import './playground/index';
+    import('./playground/index').then((module) => {
+      console.log('playground loaded', module);
+    });
+  }, []);
 
   return (
     <div className={styles['nn-container']}>

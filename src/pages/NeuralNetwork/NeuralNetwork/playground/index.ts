@@ -887,7 +887,7 @@ function updateDecisionBoundary(network: nn.Node[][], firstTime: boolean) {
 
   const i = 0,
     j = 0;
-  for (i = 0; i < DENSITY; i++) {
+  for (let i = 0; i < DENSITY; i++) {
     if (firstTime) {
       nn.forEachNode(network, true, (node) => {
         boundary[node.id][i] = new Array(DENSITY);
@@ -897,7 +897,7 @@ function updateDecisionBoundary(network: nn.Node[][], firstTime: boolean) {
         boundary[nodeId][i] = new Array(DENSITY);
       }
     }
-    for (j = 0; j < DENSITY; j++) {
+    for (let j = 0; j < DENSITY; j++) {
       // 1 for points inside the circle, and 0 for points outside the circle.
       const x = xScale(i);
       const y = yScale(j);
