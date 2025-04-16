@@ -27,8 +27,7 @@ import {
 } from './state';
 import { Example2D, shuffle } from './dataset';
 import { AppendingLineChart } from './linechart';
-import { mouse as d3Mouse, event as d3Event } from 'd3';
-import d3 from 'd3';
+import * as d3 from 'd3';
 
 let mainWidth: number;
 
@@ -422,7 +421,10 @@ function updateBiasesUI(network: nn.Node[][]) {
   });
 }
 
-function updateWeightsUI(network: nn.Node[][], container) {
+function updateWeightsUI(
+  network: nn.Node[][],
+  container: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
+) {
   for (let layerIdx = 1; layerIdx < network.length; layerIdx++) {
     const currentLayer = network[layerIdx];
     // Update all the nodes in this layer.
@@ -432,11 +434,9 @@ function updateWeightsUI(network: nn.Node[][], container) {
         const link = node.inputLinks[j];
         container
           .select(`#link${link.source.id}-${link.dest.id}`)
-          .style({
-            'stroke-dashoffset': -iter / 3,
-            'stroke-width': linkWidthScale(Math.abs(link.weight)),
-            stroke: colorScale(link.weight),
-          })
+          .style('stroke-dashoffset', -iter / 3)
+          .style('stroke-width', linkWidthScale(Math.abs(link.weight)))
+          .style('stroke', colorScale(link.weight))
           .datum(link);
       }
     }
@@ -448,35 +448,35 @@ function drawNode(
   cy: number,
   nodeId: string,
   isInput: boolean,
-  container,
+  container: d3.Selection<any, unknown, HTMLElement, any>,
   node?: nn.Node,
 ) {
   const x = cx - RECT_SIZE / 2;
   const y = cy - RECT_SIZE / 2;
 
-  const nodeGroup = container.append('g').attr({
-    class: 'node',
-    id: `node${nodeId}`,
-    transform: `translate(${x},${y})`,
-  });
+  const nodeGroup = container
+    .append('g')
+    .attr('class', 'node')
+    .attr('id', `node${nodeId}`)
+    .attr('transform', `translate(${x},${y})`);
 
   // Draw the main rectangle.
-  nodeGroup.append('rect').attr({
-    x: 0,
-    y: 0,
-    width: RECT_SIZE,
-    height: RECT_SIZE,
-  });
+  nodeGroup
+    .append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', RECT_SIZE)
+    .attr('height', RECT_SIZE);
   const activeOrNotClass = state[nodeId] ? 'active' : 'inactive';
   if (isInput) {
     const label = INPUTS[nodeId].label != null ? INPUTS[nodeId].label : nodeId;
     // Draw the input label.
-    const text = nodeGroup.append('text').attr({
-      class: 'main-label',
-      x: -10,
-      y: RECT_SIZE / 2,
-      'text-anchor': 'end',
-    });
+    const text = nodeGroup
+      .append('text')
+      .attr('class', 'main-label')
+      .attr('x', -10)
+      .attr('y', RECT_SIZE / 2)
+      .attr('text-anchor', 'end');
     if (/[_^]/.test(label)) {
       const myRe = /(.*?)([_^])(.)/g;
       let myArray;
@@ -507,15 +507,17 @@ function drawNode(
     // Draw the node's bias.
     nodeGroup
       .append('rect')
-      .attr({
-        id: `bias-${nodeId}`,
-        x: -BIAS_SIZE - 2,
-        y: RECT_SIZE - BIAS_SIZE + 3,
-        width: BIAS_SIZE,
-        height: BIAS_SIZE,
-      })
-      .on('mouseenter', function () {
-        updateHoverCard(HoverType.BIAS, node, d3Mouse(container.node()));
+      .attr('id', `bias-${nodeId}`)
+      .attr('x', -BIAS_SIZE - 2)
+      .attr('y', RECT_SIZE - BIAS_SIZE + 3)
+      .attr('width', BIAS_SIZE)
+      .attr('height', BIAS_SIZE)
+      .on('mouseenter', function (event) {
+        updateHoverCard(
+          HoverType.BIAS,
+          node,
+          d3.pointer(event, container.node()),
+        );
       })
       .on('mouseleave', function () {
         updateHoverCard(null);
@@ -526,15 +528,11 @@ function drawNode(
   const div = d3
     .select('#network')
     .insert('div', ':first-child')
-    .attr({
-      id: `canvas-${nodeId}`,
-      class: 'canvas',
-    })
-    .style({
-      position: 'absolute',
-      left: `${x + 3}px`,
-      top: `${y + 3}px`,
-    })
+    .attr('id', `canvas-${nodeId}`)
+    .attr('class', 'canvas')
+    .style('position', 'absolute')
+    .style('left', `${x + 3}px`)
+    .style('top', `${y + 3}px`)
     .on('mouseenter', function () {
       selectedNodeId = nodeId;
       div.classed('hovered', true);
@@ -600,9 +598,10 @@ function drawNetwork(network: nn.Node[][]): void {
   const numLayers = network.length;
   const featureWidth = 118;
   const layerScale = d3
-    .scaleOrdinal<number, number>()
+    .scalePoint()
     .domain(d3.range(1, numLayers - 1))
-    .rangePoints([featureWidth, width - RECT_SIZE], 0.7);
+    .range([featureWidth, width - RECT_SIZE])
+    .padding(0.7);
   const nodeIndexScale = (nodeIndex: number) => nodeIndex * (RECT_SIZE + 25);
 
   const calloutThumb = d3.select('.callout.thumbnail').style('display', 'none');
@@ -786,8 +785,8 @@ function updateHoverCard(
         updateUI();
       }
     });
-    input.on('keypress', () => {
-      if ((d3Event as any).keyCode === 13) {
+    input.on('keypress', (event) => {
+      if (event.keyCode === 13) {
         updateHoverCard(type, nodeOrLink, coordinates);
       }
     });
@@ -821,7 +820,7 @@ function drawLink(
   input: nn.Link,
   node2coord: { [id: string]: { cx: number; cy: number } },
   network: nn.Node[][],
-  container,
+  container: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
   isFirst: boolean,
   index: number,
   length: number,
@@ -839,12 +838,11 @@ function drawLink(
       x: dest.cy + ((index - (length - 1) / 2) / length) * 12,
     },
   };
-  line.attr({
-    'marker-start': 'url(#markerArrow)',
-    class: 'link',
-    id: 'link' + input.source.id + '-' + input.dest.id,
-    d: diagonal(datum),
-  });
+  line
+    .attr('marker-start', 'url(#markerArrow)')
+    .attr('class', 'link')
+    .attr('id', 'link' + input.source.id + '-' + input.dest.id)
+    .attr('d', diagonal(datum));
 
   // Add an invisible thick link that will be used for
   // showing the weight value on hover.
@@ -852,8 +850,8 @@ function drawLink(
     .append('path')
     .attr('d', diagonal(datum))
     .attr('class', 'link-hover')
-    .on('mouseenter', function () {
-      updateHoverCard(HoverType.WEIGHT, input, d3Mouse(this));
+    .on('mouseenter', function (event) {
+      updateHoverCard(HoverType.WEIGHT, input, d3.pointer(event, this));
     })
     .on('mouseleave', function () {
       updateHoverCard(null);
