@@ -353,7 +353,7 @@ export function Component() {
               </div>
               <div id="linechart"></div>
             </div>
-            <div id="heatmap"></div>
+            <div id="decision-boundary"></div>
             <div style={{ float: 'left', marginTop: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {/* Gradient color scale */}

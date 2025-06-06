@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-import { Example2D } from './dataset';
 import * as d3 from 'd3';
 
 export interface HeatMapSettings {
@@ -137,20 +136,6 @@ export class HeatMap {
     }
   }
 
-  updateTestPoints(points: Example2D[]): void {
-    if (this.settings.noSvg) {
-      throw Error("Can't add points since noSvg=true");
-    }
-    this.updateCircles(this.svg.select('g.test'), points);
-  }
-
-  updatePoints(points: Example2D[]): void {
-    if (this.settings.noSvg) {
-      throw Error("Can't add points since noSvg=true");
-    }
-    this.updateCircles(this.svg.select('g.train'), points);
-  }
-
   updateBackground(data: number[][], discretize: boolean): void {
     const dx = data[0].length;
     const dy = data.length;
@@ -179,38 +164,6 @@ export class HeatMap {
       }
     }
     context?.putImageData(image, 0, 0);
-  }
-
-  private updateCircles(
-    container: d3.Selection<any, unknown, HTMLElement, any>,
-    points: Example2D[],
-  ) {
-    // Keep only points that are inside the bounds.
-    const xDomain = this.xScale.domain();
-    const yDomain = this.yScale.domain();
-    points = points.filter((p) => {
-      return (
-        p.x >= xDomain[0] &&
-        p.x <= xDomain[1] &&
-        p.y >= yDomain[0] &&
-        p.y <= yDomain[1]
-      );
-    });
-
-    // Attach data to initially empty selection.
-    const selection = container.selectAll('circle').data(points);
-
-    // Insert elements to match length of points array.
-    selection.enter().append('circle').attr('r', 3);
-
-    // Update points to be in the correct position.
-    selection
-      .attr('cx', (d: Example2D) => this.xScale(d.x))
-      .attr('cy', (d: Example2D) => this.yScale(d.y))
-      .style('fill', (d) => this.color(d.label));
-
-    // Remove points if the length has gone down.
-    selection.exit().remove();
   }
 } // Close class HeatMap.
 
