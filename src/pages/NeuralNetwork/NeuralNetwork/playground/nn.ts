@@ -132,10 +132,6 @@ export class Activations {
       return output * (1 - output);
     },
   };
-  public static LINEAR: ActivationFunction = {
-    output: (x) => x,
-    der: (x) => 1,
-  };
 }
 
 /** Build-in regularization functions */

@@ -89,7 +89,6 @@ export function Component() {
                   <option value="relu">ReLU</option>
                   <option value="tanh">Tanh</option>
                   <option value="sigmoid">Sigmoid</option>
-                  <option value="linear">Linear</option>
                 </select>
               </div>
             </div>
@@ -125,7 +124,6 @@ export function Component() {
               <div className="select">
                 <select id="problem">
                   <option value="classification">Classification</option>
-                  <option value="regression">Regression</option>
                 </select>
               </div>
             </div>
@@ -164,18 +162,6 @@ export function Component() {
                   <canvas
                     className="data-thumbnail"
                     data-dataset="spiral"
-                  ></canvas>
-                </div>
-                <div className="dataset" title="Plane">
-                  <canvas
-                    className="data-thumbnail"
-                    data-regDataset="reg-plane"
-                  ></canvas>
-                </div>
-                <div className="dataset" title="Multi gaussian">
-                  <canvas
-                    className="data-thumbnail"
-                    data-regDataset="reg-gauss"
                   ></canvas>
                 </div>
               </div>

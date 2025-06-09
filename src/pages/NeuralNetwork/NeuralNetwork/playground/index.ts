@@ -235,14 +235,10 @@ function reset() {
   iter = 0;
   const numInputs = constructInput(0, 0).length;
   const shape = [numInputs].concat(state.networkShape).concat([1]);
-  const outputActivation =
-    state.problem === Problem.REGRESSION
-      ? nn.Activations.LINEAR
-      : nn.Activations.TANH;
   network = nn.buildNetwork(
     shape,
     state.activation,
-    outputActivation,
+    nn.Activations.TANH,
     state.regularization,
     constructInputIds(),
     state.initZero,

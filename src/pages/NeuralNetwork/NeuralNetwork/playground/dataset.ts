@@ -74,63 +74,6 @@ export function classifyTwoGaussData(
   return points;
 }
 
-export function regressPlane(numSamples: number, noise: number): Example2D[] {
-  const radius = 6;
-  const labelScale = d3.scaleLinear().domain([-10, 10]).range([-1, 1]);
-  const getLabel = (x: number, y: number) => labelScale(x + y);
-
-  const points: Example2D[] = [];
-  for (let i = 0; i < numSamples; i++) {
-    const x = randUniform(-radius, radius);
-    const y = randUniform(-radius, radius);
-    const noiseX = randUniform(-radius, radius) * noise;
-    const noiseY = randUniform(-radius, radius) * noise;
-    const label = getLabel(x + noiseX, y + noiseY);
-    points.push({ x, y, label });
-  }
-  return points;
-}
-
-export function regressGaussian(
-  numSamples: number,
-  noise: number,
-): Example2D[] {
-  const points: Example2D[] = [];
-
-  const labelScale = d3.scaleLinear().domain([0, 2]).range([1, 0]).clamp(true);
-
-  const gaussians = [
-    [-4, 2.5, 1],
-    [0, 2.5, -1],
-    [4, 2.5, 1],
-    [-4, -2.5, -1],
-    [0, -2.5, 1],
-    [4, -2.5, -1],
-  ];
-
-  function getLabel(x: number, y: number) {
-    // Choose the one that is maximum in abs value.
-    let label = 0;
-    gaussians.forEach(([cx, cy, sign]) => {
-      const newLabel = sign * labelScale(dist({ x, y }, { x: cx, y: cy }));
-      if (Math.abs(newLabel) > Math.abs(label)) {
-        label = newLabel;
-      }
-    });
-    return label;
-  }
-  const radius = 6;
-  for (let i = 0; i < numSamples; i++) {
-    const x = randUniform(-radius, radius);
-    const y = randUniform(-radius, radius);
-    const noiseX = randUniform(-radius, radius) * noise;
-    const noiseY = randUniform(-radius, radius) * noise;
-    const label = getLabel(x + noiseX, y + noiseY);
-    points.push({ x, y, label });
-  }
-  return points;
-}
-
 export function classifySpiralData(
   numSamples: number,
   noise: number,
