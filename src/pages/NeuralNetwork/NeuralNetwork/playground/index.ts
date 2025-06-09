@@ -2,7 +2,6 @@ import * as nn from './nn';
 import { HeatMap } from './heatmap';
 import { State, datasets, getKeyFromValue, Problem } from './state';
 import { Example2D, shuffle } from './dataset';
-import { AppendingLineChart } from './linechart';
 import * as d3 from 'd3';
 
 const NUM_SAMPLES_CLASSIFY = 500;
@@ -26,7 +25,7 @@ const INPUTS: { [name: string]: InputFeature } = {
 class Player {
   private timerIndex = 0;
   private isPlaying = false;
-  private callback: (isPlaying: boolean) => void = null;
+  private callback?: (isPlaying: boolean) => void;
 
   /** Plays/pauses the player. */
   playOrPause() {
@@ -35,15 +34,8 @@ class Player {
       this.pause();
     } else {
       this.isPlaying = true;
-      if (iter === 0) {
-        simulationStarted();
-      }
       this.play();
     }
-  }
-
-  onPlayPause(callback: (isPlaying: boolean) => void) {
-    this.callback = callback;
   }
 
   play() {
@@ -76,15 +68,8 @@ class Player {
 
 const state = State.deserializeState();
 
-// Filter out inputs that are hidden.
-state.getHiddenProps().forEach((prop) => {
-  if (prop in INPUTS) {
-    delete INPUTS[prop];
-  }
-});
-
 let boundary: { [id: string]: number[][] } = {};
-let selectedNodeId: string | null = null;
+const selectedNodeId: string | null = null;
 // Plot the heatmap.
 const xDomain: [number, number] = [-6, 6];
 const heatMap = new HeatMap(
@@ -102,25 +87,12 @@ const colorScale = d3
   .clamp(true);
 let iter = 0;
 let trainData: Example2D[] = [];
-let testData: Example2D[] = [];
 let network: nn.Node[][] | null = null;
-let lossTrain = 0;
-let lossTest = 0;
 const player = new Player();
-const lineChart = new AppendingLineChart(d3.select('#linechart'), [
-  '#777',
-  'black',
-]);
 
 function makeGUI() {
   d3.select('#play-pause-button').on('click', function () {
-    // Change the button's content.
-    userHasInteracted();
     player.playOrPause();
-  });
-
-  player.onPlayPause((isPlaying) => {
-    d3.select('#play-pause-button').classed('playing', isPlaying);
   });
 
   const dataThumbnails = d3.selectAll('canvas[data-dataset]');
@@ -133,7 +105,6 @@ function makeGUI() {
     dataThumbnails.classed('selected', false);
     d3.select(this).classed('selected', true);
     generateData();
-    parametersChanged = true;
     reset();
   });
 
@@ -211,17 +182,6 @@ function updateDecisionBoundary(network: nn.Node[][], firstTime: boolean) {
   }
 }
 
-function getLoss(network: nn.Node[][], dataPoints: Example2D[]): number {
-  let loss = 0;
-  for (let i = 0; i < dataPoints.length; i++) {
-    const dataPoint = dataPoints[i];
-    const input = constructInput(dataPoint.x, dataPoint.y);
-    const output = nn.forwardProp(network, input);
-    loss += nn.Errors.SQUARE.error(output, dataPoint.label);
-  }
-  return loss / dataPoints.length;
-}
-
 function updateUI(firstStep = false) {
   // Update the links visually.
   // updateWeightsUI(network, d3.select('g.core'));
@@ -232,32 +192,6 @@ function updateUI(firstStep = false) {
   const selectedId =
     selectedNodeId != null ? selectedNodeId : nn.getOutputNode(network).id;
   heatMap.updateBackground(boundary[selectedId], false);
-
-  // Update all decision boundaries.
-  // d3.select('#network')
-  //   .selectAll('div.canvas')
-  //   .each(function (data: { heatmap: HeatMap; id: string }) {
-  //     data.heatmap.updateBackground(reduceMatrix(boundary[data.id], 10), false);
-  //   });
-
-  function zeroPad(n: number): string {
-    const pad = '000000';
-    return (pad + n).slice(-pad.length);
-  }
-
-  function addCommas(s: string): string {
-    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  function humanReadable(n: number): string {
-    return n.toFixed(3);
-  }
-
-  // Update loss and iteration number.
-  d3.select('#loss-train').text(humanReadable(lossTrain));
-  d3.select('#loss-test').text(humanReadable(lossTest));
-  d3.select('#iter-number').text(addCommas(zeroPad(iter)));
-  lineChart.addDataPoint([lossTrain, lossTest]);
 }
 
 function constructInputIds(): string[] {
@@ -290,23 +224,12 @@ function oneStep(): void {
       nn.updateWeights(network, state.learningRate, state.regularizationRate);
     }
   });
-  // Compute the loss.
-  lossTrain = getLoss(network, trainData);
-  lossTest = getLoss(network, testData);
   updateUI();
 }
 
-function reset(onStartup = false) {
-  lineChart.reset();
+function reset() {
   state.serialize();
-  if (!onStartup) {
-    userHasInteracted();
-  }
   player.pause();
-
-  const suffix = state.numHiddenLayers !== 1 ? 's' : '';
-  d3.select('#layers-label').text('Hidden layer' + suffix);
-  d3.select('#num-layers').text(state.numHiddenLayers);
 
   // Make a simple network.
   iter = 0;
@@ -324,9 +247,6 @@ function reset(onStartup = false) {
     constructInputIds(),
     state.initZero,
   );
-  lossTrain = getLoss(network, trainData);
-  lossTest = getLoss(network, testData);
-  // drawNetwork(network);
   updateUI(true);
 }
 
@@ -363,7 +283,6 @@ function generateData(firstTime = false) {
     // Change the seed.
     state.seed = Math.random().toFixed(5);
     state.serialize();
-    userHasInteracted();
   }
   Math.seedrandom(state.seed);
   const numSamples = NUM_SAMPLES_CLASSIFY;
@@ -374,36 +293,9 @@ function generateData(firstTime = false) {
   // Split into train and test data.
   const splitIndex = Math.floor((data.length * state.percTrainData) / 100);
   trainData = data.slice(0, splitIndex);
-  testData = data.slice(splitIndex);
-}
-
-let firstInteraction = true;
-let parametersChanged = false;
-
-function userHasInteracted() {
-  if (!firstInteraction) {
-    return;
-  }
-  firstInteraction = false;
-  let page = 'index';
-  if (state.tutorial != null && state.tutorial !== '') {
-    page = `/v/tutorials/${state.tutorial}`;
-  }
-  ga('set', 'page', page);
-  ga('send', 'pageview', { sessionControl: 'start' });
-}
-
-function simulationStarted() {
-  ga('send', {
-    hitType: 'event',
-    eventCategory: 'Starting Simulation',
-    eventAction: parametersChanged ? 'changed' : 'unchanged',
-    eventLabel: state.tutorial == null ? '' : state.tutorial,
-  });
-  parametersChanged = false;
 }
 
 drawDatasetThumbnails();
 makeGUI();
 generateData(true);
-reset(true);
+reset();
