@@ -36,19 +36,22 @@ export class AppendingLineChart {
   private minY = Number.MAX_VALUE;
   private maxY = Number.MIN_VALUE;
 
-  constructor(container, lineColors: string[]) {
+  constructor(
+    container: d3.Selection<any, unknown, HTMLElement, any>,
+    lineColors: string[],
+  ) {
     this.lineColors = lineColors;
     this.numLines = lineColors.length;
-    let node = container.node() as HTMLElement;
-    let totalWidth = node.offsetWidth;
-    let totalHeight = node.offsetHeight;
-    let margin = { top: 2, right: 0, bottom: 2, left: 2 };
-    let width = totalWidth - margin.left - margin.right;
-    let height = totalHeight - margin.top - margin.bottom;
+    const node = container.node() as HTMLElement;
+    const totalWidth = node.offsetWidth;
+    const totalHeight = node.offsetHeight;
+    const margin = { top: 2, right: 0, bottom: 2, left: 2 };
+    const width = totalWidth - margin.left - margin.right;
+    const height = totalHeight - margin.top - margin.bottom;
 
-    this.xScale = d3.scale.linear().domain([0, 0]).range([0, width]);
+    this.xScale = d3.scaleLinear().domain([0, 0]).range([0, width]);
 
-    this.yScale = d3.scale.linear().domain([0, 0]).range([height, 0]);
+    this.yScale = d3.scaleLinear().domain([0, 0]).range([height, 0]);
 
     this.svg = container
       .append('svg')
@@ -59,11 +62,12 @@ export class AppendingLineChart {
 
     this.paths = new Array(this.numLines);
     for (let i = 0; i < this.numLines; i++) {
-      this.paths[i] = this.svg.append('path').attr('class', 'line').style({
-        fill: 'none',
-        stroke: lineColors[i],
-        'stroke-width': '1.5px',
-      });
+      this.paths[i] = this.svg
+        .append('path')
+        .attr('class', 'line')
+        .style('fill', 'none')
+        .attr('stroke', lineColors[i])
+        .style('stroke-width', '1.5px');
     }
   }
 
@@ -92,8 +96,8 @@ export class AppendingLineChart {
     this.xScale.domain([1, this.data.length]);
     this.yScale.domain([this.minY, this.maxY]);
     // Adjust all the <path> elements (lines).
-    let getPathMap = (lineIndex: number) => {
-      return d3.svg
+    const getPathMap = (lineIndex: number) => {
+      return d3
         .line<{ x: number; y: number }>()
         .x((d) => this.xScale(d.x))
         .y((d) => this.yScale(d.y[lineIndex]));
